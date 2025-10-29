@@ -32,73 +32,134 @@ public class Student extends Person {
 ```
 ### 2. 类结构重新设计
 包结构设计
+
 通过scr包和main包来区分
+
 继承关系图
 ```mermaid
-graph TD
-    A[开始] --> B[创建教师对象]
-    A --> C[创建学生对象]
+classDiagram
+    class Person {
+        <<abstract>>
+        #String id
+        #String name
+        +Person(String id, String name)
+        +printInfo() void
+        +printWorkSheet()* void
+        +getId() String
+        +getName() String
+    }
     
-    B --> D[教师开课]
-    D --> E[课程对象创建]
+    class Student {
+        -List~Course~ selectedCourses
+        +Student(String id, String name)
+        +selectCourse(Course) void
+        +dropCourse(Course) void
+        +printWorkSheet() void
+    }
     
-    C --> F[学生选课]
-    F --> G{选课是否成功?}
-    G -->|是| H[更新课程学生列表]
-    G -->|否| I[显示选课失败信息]
+    class Teacher {
+        -List~Course~ teachingCourses
+        +Teacher(String id, String name)
+        +openCourse(String, String, String, int) void
+        +printWorkSheet() void
+    }
     
-    H --> J[打印学生课表]
-    I --> K[结束]
+    class Course {
+        -String courseId
+        -String courseName
+        -Teacher teacher
+        -String location
+        -String time
+        -int maxStudents
+        -List~Student~ students
+        +addStudent(Student) boolean
+        +removeStudent(Student) boolean
+        +getStudentCount() int
+    }
     
-    E --> L[打印教师授课信息]
-    J --> K
-    L --> K
-    
-    style B fill:#e1f5fe
-    style C fill:#e1f5fe
-    style D fill:#f3e5f5
-    style F fill:#f3e5f5
-    style J fill:#e8f5e8
-    style L fill:#e8f5e8
+    Person <|-- Student
+    Person <|-- Teacher
+    Teacher --> Course
+    Student --> Course
+```
 ### 3. 核心改进内容
-权限访问控制
+#### 权限访问控制
+
 使用protected修饰符：允许子类访问父类的属性和方法，同时对外部类保持封装性
 使用private修饰符：确保类的内部实现细节不被外部直接访问
+```java
+    protected String id;
+    protected String name;
+    protected String gender;
+    protected String email;
+    protected String phoneNumber;
+```
+
 包级别访问控制：通过不同package验证访问权限
-继承机制应用
+ scr，main
+#### 继承机制应用
+
 构造方法继承：子类通过super()调用父类构造方法完成基础属性初始化
-方法重写：子类重写父类的printSchedule()方法，实现各自特有的课表打印逻辑
+```java
+public class Student extends Person {
+    private Course selectedCourse;
+    
+    public Student(String id, String name, String gender, String email, String phoneNumber) {
+        super(id, name, gender, email, phoneNumber);
+    }
+```
+
+方法重写：子类重写父类的printInfo()方法，实现各自特有的课表打印逻辑
+```java
+    @Override
+    public void printInfo() {
+        // 先打印父类的基本信息
+        super.printInfo();
+        // 附加学生特有的选课信息
+        if (selectedCourse != null) {
+            System.out.println("已选课程: " + selectedCourse.getCourseName());
+        } else {
+            System.out.println("未选择课程");
+        }
+    }
+```
 代码复用：将公共的属性和方法提取到Person父类中，减少代码冗余
-多态性体现
-父类定义统一的接口方法printSchedule()
-子类根据自身特性实现不同的课表展示方式
-测试类中可以统一处理Person类型的对象，实现多态调用
-### 4. 系统流程改进
-教师开课流程
 
-学生选课流程
+### 4. 实验验证结果
+#### 权限访问控制验证
 
-### 5. 实验验证结果
-权限访问控制验证
 在不同package中测试类的可见性
+
 验证protected成员在子类中的可访问性
+
 测试private成员的外部不可访问性
-继承效果验证
+
+#### 继承效果验证
 子类成功继承父类的属性和方法
+
 构造方法链正确执行
+
 方法重写按预期工作
+
 ## 实验总结
-改进效果
+#### 改进效果
+
 代码结构优化：通过继承关系消除了重复代码，提高了代码复用性
+
 系统扩展性增强：新增人员类型时只需继承Person类，符合开闭原则
+
 维护性提升：公共逻辑集中在父类，修改时只需在一处进行
 ## 技术收获
 深入理解了继承机制在面向对象设计中的应用
+
 掌握了权限访问控制修饰符的正确使用方法
+
 学会了通过构造方法链实现对象初始化
+
 理解了方法重写和多态性的实际应用场景
 ## 相比实验二的改进
 从简单的类独立设计升级为基于继承的层次化设计
+
 代码冗余显著减少
 系统结构更加清晰，符合面向对象设计原则
 为后续实验引入接口和抽象类打下了良好基础
