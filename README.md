@@ -1,23 +1,65 @@
 # java-Experiment-Three
 ## 实验目的
 掌握权限访问控制修饰符的使用
+
 掌握继承的使用方法
+
 在实验二基础上通过继承关系优化系统设计
 ## 实验要求
 在实验二代码基础上完成本次实验
+
 采用父类-子类的继承关系重新设计类结构
+
 掌握构造方法和super()的用法
+
 定义父类业务方法，子类实现具体功能
+
 验证权限访问控制和继承后的可见性
+
 ##实验过程
 ### 1. 继承关系设计分析
 通过分析实验二的系统，识别出以下共性：
 Person类：作为Teacher和Student的父类，包含共同的属性和方法
 共同的属性：id、name、phoneNumber、gender、email
 共同的方法：个人信息打印、课表打印
+``` java
+public class Student extends Person {
+    private Course selectedCourse;
+    
+    public Student(String id, String name, String gender, String email, String phoneNumber) {
+        super(id, name, gender, email, phoneNumber);
+    }
+```
 ### 2. 类结构重新设计
 包结构设计
+通过scr包和main包来区分
 继承关系图
+```mermaid
+graph TD
+    A[开始] --> B[创建教师对象]
+    A --> C[创建学生对象]
+    
+    B --> D[教师开课]
+    D --> E[课程对象创建]
+    
+    C --> F[学生选课]
+    F --> G{选课是否成功?}
+    G -->|是| H[更新课程学生列表]
+    G -->|否| I[显示选课失败信息]
+    
+    H --> J[打印学生课表]
+    I --> K[结束]
+    
+    E --> L[打印教师授课信息]
+    J --> K
+    L --> K
+    
+    style B fill:#e1f5fe
+    style C fill:#e1f5fe
+    style D fill:#f3e5f5
+    style F fill:#f3e5f5
+    style J fill:#e8f5e8
+    style L fill:#e8f5e8
 ### 3. 核心改进内容
 权限访问控制
 使用protected修饰符：允许子类访问父类的属性和方法，同时对外部类保持封装性
