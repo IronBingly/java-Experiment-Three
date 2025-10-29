@@ -43,25 +43,16 @@ classDiagram
         #String id
         #String name
         +Person(String id, String name)
-        +printInfo() void
-        +printWorkSheet()* void
-        +getId() String
-        +getName() String
     }
     
     class Student {
         -List~Course~ selectedCourses
         +Student(String id, String name)
-        +selectCourse(Course) void
-        +dropCourse(Course) void
-        +printWorkSheet() void
     }
     
     class Teacher {
         -List~Course~ teachingCourses
         +Teacher(String id, String name)
-        +openCourse(String, String, String, int) void
-        +printWorkSheet() void
     }
     
     class Course {
@@ -70,11 +61,6 @@ classDiagram
         -Teacher teacher
         -String location
         -String time
-        -int maxStudents
-        -List~Student~ students
-        +addStudent(Student) boolean
-        +removeStudent(Student) boolean
-        +getStudentCount() int
     }
     
     Person <|-- Student
