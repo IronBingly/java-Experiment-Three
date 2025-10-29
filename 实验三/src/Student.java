@@ -46,4 +46,16 @@ public class Student extends Person {
         }
         System.out.println("—————————————————分割线—————————————————");
     }
+
+    @Override
+    public void printInfo() {
+        // 先打印父类的基本信息
+        super.printInfo();
+        // 附加学生特有的选课信息
+        if (selectedCourse != null) {
+            System.out.println("已选课程: " + selectedCourse.getCourseName());
+        } else {
+            System.out.println("未选择课程");
+        }
+    }
 }

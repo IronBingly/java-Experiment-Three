@@ -30,4 +30,16 @@ public class Teacher extends Person {
         }
         System.out.println("—————————————————分割线—————————————————");
     }
+
+    @Override
+    public void printInfo() {
+        // 先打印父类的基本信息
+        super.printInfo();
+        // 附加教师特有的授课信息
+        if (teachingCourse != null) {
+            System.out.println("授课课程: " + teachingCourse.getCourseName());
+        } else {
+            System.out.println("暂无授课课程");
+        }
+    }
 }
